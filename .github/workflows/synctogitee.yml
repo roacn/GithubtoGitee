@@ -49,6 +49,7 @@ jobs:
           git clone --depth 1 -b ${{ matrix.githubBranchName }} https://github.com/${{ matrix.githubUserName }}/${{ matrix.githubRepoName }} $githubRepoDir
           cd $githubRepoDir
           echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          rm -rf $githubRepoDir
           
       - name: Compare Commit Hash
         id: compareHash
@@ -61,7 +62,6 @@ jobs:
         if: steps.compareHash.outputs.cache-hit != 'true'
         run: |
           echo ${{ steps.getHash.outputs.commitHash }} | tee .commitHash
-          rm -rf ${{ env.githubRepoDir }}
           
       - name: Github Sync to Gitee
         continue-on-error: true
