@@ -1,5 +1,5 @@
 #=======================================================================================================================
-# Description: Delete older releases and artifacts
+# Description: Delete Workflows
 #=======================================================================================================================
 
 name: Delete Workflows
@@ -17,8 +17,9 @@ on:
         required: true
         default: '0'
         type: string
-  schedule:
-   - cron: 0 20 * * *
+  # 启动定时请取消下面的“#”
+  #schedule:
+   #- cron: 0 20 * * *
    
 jobs:
   build:
