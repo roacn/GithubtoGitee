@@ -132,11 +132,19 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBLsbAHgz3ob30/A7NlSXXs4bpSTxLI+TV3OLDhfvR
 
 ### 说明
 
-运行actions即可同步至Gitee仓库，同时会将Github源仓库最新提交的commit值保存至actions缓存；
+- `Actions`->`Caches`，保存着上游Github仓库，最新commit的hash值
 
-如因解析gitee.com失败(ssh: Could not resolve hostname gitee.com: Try again)导致同步Gitee仓库失败，可删除缓存、或在workflow启动强制同步，来进行同步。
+  运行actions即可同步至Gitee仓库，同时会将Github源仓库最新提交的commit值保存至actions缓存；
 
+- gitee仓库体积过大，会导致同步失败！
 
+  - `gitee`仓库->`管理`->`清空仓库`，再重新同步
+  - [gitee仓库体积过大，如何减小](https://help.gitee.com/repository/base/%E4%BB%93%E5%BA%93%E4%BD%93%E7%A7%AF%E8%BF%87%E5%A4%A7%EF%BC%8C%E5%A6%82%E4%BD%95%E5%87%8F%E5%B0%8F)
+  - github仓库体积过大，也会最终导致此类错误；可网上搜索瘦身方案；
 
-> Gitee仓库自带Github同步至Gitee仓库功能，也可以尝试下。
+- gitee.com域名解析失败
+
+  如因解析gitee.com失败(`ssh: Could not resolve hostname gitee.com: Try again`)导致同步Gitee仓库失败，可删除缓存、或在workflow启动强制同步，来进行同步。
+
+- Gitee仓库自带Github同步至Gitee仓库功能，也可以尝试下。
 
