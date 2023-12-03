@@ -35,7 +35,6 @@ jobs:
             # 注意替换为需要同步的 GitHub 源仓库地址
           - githubUserName: GithubUser1
             githubRepoName: GithubRepo1
-            githubBranchName: master
             # 注意替换为你的 gitee 目标仓库地址
             giteeUserName: GiteeUser1
             giteeRepoName: GiteeRepo1
@@ -46,7 +45,7 @@ jobs:
         run: |
           githubRepoDir=${{ matrix.githubUserName }}-${{ matrix.githubRepoName }}
           echo "githubRepoDir=$githubRepoDir" >> $GITHUB_ENV
-          git clone --depth 1 -b ${{ matrix.githubBranchName }} https://github.com/${{ matrix.githubUserName }}/${{ matrix.githubRepoName }} $githubRepoDir
+          git clone --depth 1 https://github.com/${{ matrix.githubUserName }}/${{ matrix.githubRepoName }} $githubRepoDir
           cd $githubRepoDir
           echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
           rm -rf $githubRepoDir

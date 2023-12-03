@@ -102,13 +102,12 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBLsbAHgz3ob30/A7NlSXXs4bpSTxLI+TV3OLDhfvR
         # 注意替换为需要同步的 GitHub 源仓库地址
       - githubUserName: GithubUser1			# Github源仓库用户名
         githubRepoName: Repository1			# Github源仓库名称
-        githubBranchName: master			# Github源仓库分支
         # 注意替换为你的 Gitee 目标仓库地址
-        giteeUserName: GiteeUser1			# Gitee目标仓库用户名
-        giteeRepoName: Repository1			# Gitee目标仓库名称
+        giteeUserName: GiteeUser1			  # Gitee目标仓库用户名
+        giteeRepoName: GiteeRepo1			  # Gitee目标仓库名称
+        # 同步多个仓库，请按要求追加即可
       - githubUserName: GithubUser2
         githubRepoName: GithubRepo2
-        githubBranchName: master
         giteeUserName: GiteeUser2
         giteeRepoName: GiteeRepo2
 ```
