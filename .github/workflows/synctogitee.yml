@@ -6,24 +6,19 @@
 name: Sync to Gitee
 
 on:
-  #push:
-    #branches: [master]
   workflow_dispatch:
     inputs:
       FORCE_MIRROR:
-        description: '开启强制同步至Gitee'
+        description: '强制同步至Gitee'
         required: false
         default: false
         type: boolean
 
   # 启动定时请取消下面的“#”
   #schedule:
-   #- cron: 30 4-16/3 * * 1-5
-   #- cron: 30 0-16/3 * * 0,6
+   #- cron: 30 4-16/6 * * 1-5
+   #- cron: 30 0-16/8 * * 0,6
    
-env:
-  DESTINATION_HOSTNAME: gitee.com
-  
 jobs:
   git-mirror:
     runs-on: ubuntu-latest
@@ -32,30 +27,35 @@ jobs:
       fail-fast: false
       matrix:
         include:
-            # 注意替换为需要同步的 GitHub 源仓库地址
-          - githubUserName: GithubUser1
-            githubRepoName: GithubRepo1
-            # 注意替换为你的 gitee 目标仓库地址
-            giteeUserName: GiteeUser1
-            giteeRepoName: GiteeRepo1
-            # 同步多个仓库，请按要求追加即可
+            # 同步多个仓库，按格式在后面追加填写
+            # github_repo的值，替换为待同步的GitHub源仓库地址；
+            # dest_hostname的值，可以替换为其他目标网站，如gitea.com，gitcode.com
+            # dest_repo的值，替换为Gitee目标仓库地址；
+          - github_repo: github_user_x/github_repo_x    # Github源仓库
+            dest_hostname: gitee.com                    # 目标网址
+            dest_repo: dest_user_x/dest_repo_x          # 目标仓库
+          - github_repo: github_user_xx/github_repo_xx  # Github源仓库
+            dest_hostname: gitee.com                    # 目标网址
+            dest_repo: dest_user_xx/dest_repo_xx        # 目标仓库
+
+            
     steps:
       - name: Get Commit Hash
         id: getHash
         run: |
-          githubRepoDir=${{ matrix.githubUserName }}-${{ matrix.githubRepoName }}
-          echo "githubRepoDir=$githubRepoDir" >> $GITHUB_ENV
-          git clone --depth 1 https://github.com/${{ matrix.githubUserName }}/${{ matrix.githubRepoName }} $githubRepoDir
-          cd $githubRepoDir
+          github_repo_dir=$(echo ${{ matrix.github_repo }} | sed 's|/|-|')
+          echo "github_repo_dir=$github_repo_dir" >> $GITHUB_ENV
+          git clone --depth 1 https://github.com/${{ matrix.github_repo }} $github_repo_dir
+          cd $github_repo_dir
           echo "commitHash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
-          rm -rf $githubRepoDir
+          rm -rf $github_repo_dir
           
       - name: Compare Commit Hash
         id: compareHash
         uses: actions/cache@v3
         with:
           path: .commitHash
-          key: ${{ env.githubRepoDir }}-${{ steps.getHash.outputs.commitHash }}
+          key: ${{ env.github_repo_dir }}-${{ steps.getHash.outputs.commitHash }}
           
       - name: Generate Commit Hash
         if: steps.compareHash.outputs.cache-hit != 'true'
@@ -69,8 +69,8 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
-          source-repo: "git@github.com:${{ matrix.githubUserName }}/${{ matrix.githubRepoName }}.git"
-          destination-repo: "git@${{ env.DESTINATION_HOSTNAME }}:${{ matrix.giteeUserName }}/${{ matrix.giteeRepoName }}.git"
+          source-repo: "git@github.com:${{ matrix.github_repo }}.git"
+          destination-repo: "git@${{ matrix.dest_hostname }}:${{ matrix.dest_repo }}.git"
 
       - name: Delete Older Workflow Runs
         uses: Mattraks/delete-workflow-runs@main

@@ -14,7 +14,7 @@
 
 ### 秘钥
 
-在仓库settings添加以下两个secrets：
+在仓库`Settings`添加以下两个secrets：
 
 - REPO_TOKEN
 - SSH_PRIVATE_KEY
@@ -31,10 +31,10 @@
 
 #### 2、Github 添加 SSH_PRIVATE_KEY
 
-首先，[生成SSH密钥](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux)（可点击此处参考）；
+首先，[生成SSH密钥](https://docs.github.com/zh/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent?platform=linux#generating-a-new-ssh-key)（可点击此处参考），输入命令后连续按回车即可生成；
 
 ```shell
-root@debian:~/.ssh# ssh-keygen -t rsa -b 4096 -C "xxx@xxxxx.com"   # xxx@xxxxx.com改为常用邮箱即可
+root@debian:~# ssh-keygen -t rsa -b 4096 -C "xxx@xxxxx.com"   # xxx@xxxxx.com改为常用邮箱即可
 Generating public/private rsa key pair.
 Enter file in which to save the key (/root/.ssh/id_rsa):
 Enter passphrase (empty for no passphrase):
@@ -60,7 +60,7 @@ The key's randomart image is:
 将密钥打印出`cat ~/.ssh/id_rsa`，并复制粘贴给 SSH_PRIVATE_KEY
 
 ```shell
-root@debian:~/.ssh# cat ~/.ssh/id_rsa
+root@debian:~# cat ~/.ssh/id_rsa
 -----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAACFwAAAAdzc2gtcn
 ....
@@ -73,14 +73,14 @@ pZZzg3TmkHC4+SY9iXvdARvC05wNWshbgj2XVA/NwQqXT83aAeGXoLMrp65sHoW1/Wwwwz
 
 #### 3、Gitee 添加 SSH公钥
 
-将公钥打印出`cat ~/.ssh/id_rsa.pub`，并复制公钥
+将公钥打印出`cat ~/.ssh/id_rsa.pub`，并复制公钥；在`gitee`主页右上角个人图标 -> `设置` -> `SSH公钥` -> `添加公钥`，粘贴打印出的`公钥`；
+
+[点击前往添加 SSH公钥](https://gitee.com/profile/sshkeys)
 
 ```shell
-root@debian:~/.ssh# cat ~/.ssh/id_rsa.pub
+root@debian:~# cat ~/.ssh/id_rsa.pub
 ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBLsbAHgz3ob30/A7NlSXXs4bpSTxLI+TV3OLDhfvRItuDV0E796xnUsLXXyCQYyBjMDZtgJsFpQDT1q0BDbEgqOBkBz4t8zgizKeMgD+evSo4ndG/kdPm38lCCWwnuG/LMYXGq5C1UvLfoay/fuIhFPQHtAjmroJN16rsU7+ExibOEc4tADphfxvS/71gtpx1SA5130jgXnVzoK+PVJhQWHlG+mLERbG8NW8AUXR7joM5qqCRcAlgpQNh/6v4Usan2tb/bkFBHhtCUTNNv3OM65BqTX5oze5FFUArpTzTLDCnsVavlS8L3vJsVCOsRRkybV6QKruvvNxgITPP7J0ddcXNu5lQt/oh9J05pcN4z4NOey3lQplBWMoGkbtO7U09prc0/kQqxPICf2dvwOM0HPELbttDJ+VtIMpqrsQ7XnhVQEH5r/lBwZkjukRBCc409Jr8Dx9QOnc6PiAT0MjBATt2LyYtKBcr8YrWLf/Xy1T56DSVkMF8YXtUlQR2JWAv7NNhjRh3bZKRI9rYR7nFtwt10Zao2tTlApYXMAJtznWoVagyuckOIm4LgV97wBLUiJynOcoDb9bW5kNgQuwe8+/HsU2xIfswIR9m8Qm2RWFSifoBUJyntFZU61CtrBsbbIWnpw82pwqqnam3q0te2Wp4alDRgV4b8i29JFtslQ== xxx@xxxxx.com
 ```
-
-在`gitee`主页右上角个人图标 -> `设置` -> `SSH公钥` -> `添加公钥`，粘贴打印出的`公钥`；
 
 
 
@@ -99,29 +99,33 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDBLsbAHgz3ob30/A7NlSXXs4bpSTxLI+TV3OLDhfvR
 ```yaml
   matrix:
     include:
-        # 注意替换为需要同步的 GitHub 源仓库地址
-      - githubUserName: GithubUser1			# Github源仓库用户名
-        githubRepoName: Repository1			# Github源仓库名称
-        # 注意替换为你的 Gitee 目标仓库地址
-        giteeUserName: GiteeUser1			  # Gitee目标仓库用户名
-        giteeRepoName: GiteeRepo1			  # Gitee目标仓库名称
-        # 同步多个仓库，请按要求追加即可
-      - githubUserName: GithubUser2
-        githubRepoName: GithubRepo2
-        giteeUserName: GiteeUser2
-        giteeRepoName: GiteeRepo2
+        # 同步多个仓库，按格式在后面追加填写
+        # github_repo的值，替换为待同步的GitHub源仓库地址；
+        # dest_repo的值，替换为Gitee目标仓库地址；
+      - github_repo: github_user_x/github_repo_x    # Github源仓库
+        dest_hostname: gitee.com                    # 目标网址
+        dest_repo: dest_user_x/dest_repo_x          # 目标仓库
+      - github_repo: github_user_xx/github_repo_xx  # Github源仓库
+        dest_hostname: gitcode.com                  # 目标网址
+        dest_repo: dest_user_xx/dest_repo_xx        # 目标仓库
 ```
 
+> 注：可同步至`gitee.com`，`gitea.com`，`gitcode.com`等使用git、ssh连接的仓库，参照`gitee.com`的方式添加`ssh公钥`即可。
 
 
 
 
-  #### 2、开启定时同步，请取消下面的3个“#”
+
+</br>
+
+
+
+  #### 2、开启定时同步，请取消下面的“#”
 
 ```yml
   #schedule:
-   #- cron: 30 4-16/3 * * 1-5
-   #- cron: 30 0-16/3 * * 0,6
+   #- cron: 30 4-16/6 * * 1-5
+   #- cron: 30 0-16/8 * * 0,6
 ```
 
 
