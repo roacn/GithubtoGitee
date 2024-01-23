@@ -52,7 +52,7 @@ jobs:
           
       - name: Compare Commit Hash
         id: compareHash
-        uses: actions/cache@v3
+        uses: actions/cache@main
         with:
           path: .commitHash
           key: ${{ env.github_repo_dir }}-${{ steps.getHash.outputs.commitHash }}
